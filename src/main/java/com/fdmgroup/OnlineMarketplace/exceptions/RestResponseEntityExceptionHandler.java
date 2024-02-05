@@ -28,4 +28,28 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	public ResponseEntity<String> handleNoSuchElementFoundException(ReviewNotFoundException exception) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
 	}
+	
+	@ExceptionHandler(MissingUsernameException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<String> handleMissingUsernameException(MissingUsernameException exception) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+	}
+	
+	@ExceptionHandler(DuplicateUsernameException.class)
+	@ResponseStatus(HttpStatus.CONFLICT)
+	public ResponseEntity<String> handleDuplicateUsernameException(DuplicateUsernameException exception) {
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(exception.getMessage());
+	}
+	
+	@ExceptionHandler(TransactionNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ResponseEntity<String> handleTransactionNotFoundException(TransactionNotFoundException exception) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+	}
+	
+	@ExceptionHandler(DuplicateEmailException.class)
+	@ResponseStatus(HttpStatus.CONFLICT)
+	public ResponseEntity<String> handleDuplicateEmailException(DuplicateEmailException exception) {
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(exception.getMessage());
+	}
 }

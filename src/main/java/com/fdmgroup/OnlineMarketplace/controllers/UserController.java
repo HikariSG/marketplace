@@ -23,7 +23,7 @@ import com.fdmgroup.OnlineMarketplace.services.UserService;
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
-
+	
 	@Autowired
 	private UserService userService;
 	
@@ -37,7 +37,7 @@ public class UserController {
 		return userService.findAllUsers();
 	}
 	
-	@PostMapping("/add")
+	@PostMapping("/register")
 	public ResponseEntity<User> addNewUser(@RequestBody User user){
 		User savedUser = userService.addUser(user);
 		

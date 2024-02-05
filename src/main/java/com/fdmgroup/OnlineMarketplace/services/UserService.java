@@ -7,10 +7,14 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.fdmgroup.OnlineMarketplace.entities.Address;
 import com.fdmgroup.OnlineMarketplace.entities.User;
+import com.fdmgroup.OnlineMarketplace.exceptions.DuplicateEmailException;
+import com.fdmgroup.OnlineMarketplace.exceptions.DuplicateUsernameException;
+import com.fdmgroup.OnlineMarketplace.exceptions.MissingUsernameException;
 import com.fdmgroup.OnlineMarketplace.exceptions.UserNotFoundException;
 import com.fdmgroup.OnlineMarketplace.repositories.UserRepository;
 
@@ -19,6 +23,9 @@ public class UserService {
 	
 	@Autowired
 	private UserRepository userRepo;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	private Logger logger = LogManager.getLogger(UserService.class);
 	
@@ -34,11 +41,30 @@ public class UserService {
 
 	public List<User> findAllUsers() {
 		List<User> userList = userRepo.findAll();
-		
 		return userList;
 	}
 	
-	public User addUser(User user) {
+	public User addUser(User user){		
+		
+		String str = user.getUsername();
+		
+		if (userRepo.findByUsername(user.getUsername()).isPresent()){
+			throw new DuplicateUsernameException("Username is already in use");
+		}
+		
+		if (userRepo.findByEmail(user.getEmail()).isPresent()) {
+			throw new DuplicateEmailException("Email is already in use");
+		}
+		
+		String hashedPassword = passwordEncoder.encode(user.getPassword());
+		System.out.println("Hashed: " + hashedPassword);
+		user.setPassword(hashedPassword);
+		try {
+			userRepo.save(user);
+		} catch(MissingUsernameException e) {
+			logger.error("Missing username");
+		}
+		
 		logger.info("Saved new user");
 		return userRepo.save(user);
 	}

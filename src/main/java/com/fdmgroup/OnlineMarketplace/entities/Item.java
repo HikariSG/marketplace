@@ -1,75 +1,51 @@
 package com.fdmgroup.OnlineMarketplace.entities;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
 
 @Entity
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor 
 public class Item {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long itemId;
 	
+	@NonNull
+	@Column (nullable = false, unique = true)
 	private String itemName;
+	
 	private BigDecimal startPrice;
 	private BigDecimal buyOutPrice;
+	
+	@NonNull
+	@Column (nullable = false)
 	private String itemDescription;
 	
-	public Item() {
-		super();
-
-	}
-
-	public Item(String itemName, BigDecimal startPrice, BigDecimal buyOutPrice, String itemDescription) {
-		super();
-		this.itemName = itemName;
-		this.startPrice = startPrice;
-		this.buyOutPrice = buyOutPrice;
-		this.itemDescription = itemDescription;
-	}
-
-	public long getItemId() {
-		return itemId;
-	}
-
-	public void setItemId(long itemId) {
-		this.itemId = itemId;
-	}
-
-	public String getItemName() {
-		return itemName;
-	}
-
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
-	}
-
-	public BigDecimal getStartPrice() {
-		return startPrice;
-	}
-
-	public void setStartPrice(BigDecimal startPrice) {
-		this.startPrice = startPrice;
-	}
-
-	public BigDecimal getBuyOutPrice() {
-		return buyOutPrice;
-	}
-
-	public void setBuyOutPrice(BigDecimal buyOutPrice) {
-		this.buyOutPrice = buyOutPrice;
-	}
-
-	public String getItemDescription() {
-		return itemDescription;
-	}
-
-	public void setItemDescription(String itemDescription) {
-		this.itemDescription = itemDescription;
-	}
+	@Column (nullable = false)
+	private LocalDate listDate = LocalDate.now();
 	
+	@Column (nullable = false)
+	private ItemStatus itemStatus = ItemStatus.Active;
+
+	public Item(@NonNull String itemName, BigDecimal startPrice, BigDecimal buyOutPrice,
+			@NonNull String itemDescription) {
+		super();
+		this.itemName = itemName;
+		this.startPrice = startPrice;
+		this.buyOutPrice = buyOutPrice;
+		this.itemDescription = itemDescription;
+	}
 }

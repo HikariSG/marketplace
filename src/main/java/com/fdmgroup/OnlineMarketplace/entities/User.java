@@ -1,28 +1,63 @@
 package com.fdmgroup.OnlineMarketplace.entities;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Pattern.Flag;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
 
 @Entity
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class User {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long userId;
 	
+	@NonNull
+	@Column(nullable = false, unique = true)
 	private String username;
+	
+	@NonNull
+	@Column(nullable = false)
 	private String password;
+	
+	@NonNull
+	@Column(nullable = false)
 	private String firstName;
+	
+	@NonNull
+	@Column(nullable = false)
 	private String lastName;
+	
+	@NonNull
+	@Column(nullable = false)
 	private LocalDate dob;
+	
+	@NonNull
+	@Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",
+    		flags = Pattern.Flag.CASE_INSENSITIVE)
+	@Column(nullable = false, unique = true)
 	private String email;
+	
+	@NotNull
+	private Roles role = Roles.ROLE_USER;
 	
 	@OneToOne
 	private Address address;
@@ -32,12 +67,10 @@ public class User {
 	
 	@OneToMany
 	private List<Review> reviewsMade;
-	
-	public User() {
-		super();
-	}
 
-	public User(String username, String password, String firstName, String lastName, LocalDate dob, String email) {
+	public User(@NonNull String username, @NonNull String password, @NonNull String firstName, @NonNull String lastName,
+			@NonNull LocalDate dob,
+			@NonNull @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}", flags = Flag.CASE_INSENSITIVE) String email) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -45,98 +78,5 @@ public class User {
 		this.lastName = lastName;
 		this.dob = dob;
 		this.email = email;
-	}
-
-	public User(String username, String password, String firstName, String lastName, LocalDate dob, String email,
-			List<Item> itemsOnForSale, List<Review> reviewsMade) {
-		super();
-		this.username = username;
-		this.password = password;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.dob = dob;
-		this.email = email;
-		this.itemsOnForSale = itemsOnForSale;
-		this.reviewsMade = reviewsMade;
-	}
-
-	public long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public LocalDate getDob() {
-		return dob;
-	}
-
-	public void setDob(LocalDate dob) {
-		this.dob = dob;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public List<Item> getItemsOnForSale() {
-		return itemsOnForSale;
-	}
-
-	public void setItemsOnForSale(List<Item> itemsOnForSale) {
-		this.itemsOnForSale = itemsOnForSale;
-	}
-
-	public List<Review> getReviewsMade() {
-		return reviewsMade;
-	}
-
-	public void setReviewsMade(List<Review> reviewsMade) {
-		this.reviewsMade = reviewsMade;
-	}
-
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
-	}
+	}	
 }
